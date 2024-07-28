@@ -11,9 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
+
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -25,6 +23,7 @@ import model.SpaceRunnerSubScene;
 import org.w3c.dom.Text;
 
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -217,7 +216,6 @@ public class ViewManager {
         lecturer2.setLayoutY(160);
         lecturer2.getStyleClass().add("credit-label");
 
-
         Label studentLabel = new Label("Sinh viên thực hiện:");
         studentLabel.setFont(Font.font(20));
         studentLabel.setLayoutX(50);
@@ -235,11 +233,16 @@ public class ViewManager {
         student2.setLayoutY(280);
         student2.getStyleClass().add("credit-label");
 
-        creditsSubScene.getPane().getChildren().addAll(title, lecturer,lecturer2,studentLabel, student1, student2);
+        creditsSubScene.getPane().getChildren().addAll(title, lecturer, lecturer2, studentLabel, student1, student2);
 
-        // Áp dụng CSS cho Scene
-        String css = getClass().getResource("/application.css").toExternalForm();
-        mainScene.getStylesheets().add(css);
+        // Kiểm tra và thêm CSS vào scene
+        URL cssResource = getClass().getResource("/application.css");
+        if (cssResource != null) {
+            String css = cssResource.toExternalForm();
+            mainScene.getStylesheets().add(css);
+        } else {
+            System.err.println("Không tìm thấy tệp CSS: /application.css");
+        }
     }
 
 
@@ -257,41 +260,7 @@ public class ViewManager {
         });
     }
 
-    Media media;
-    MediaPlayer mediaPlayer;
-    MediaView mediaView;
 
-    private void createBackgroundMusic(){
-//	    	songs = new ArrayList<File>();
-//	    	directory = new File("music");
-//	    	files = directory.listFiles();
-//	    	if(files != null) {
-//
-//				for(File file : files) {
-//
-//					songs.add(file);
-//				}
-//			}
-        String resource;
-        if(mediaView == null) {
-            mediaView = new MediaView();
-            mainPane.getChildren().add(mediaView);
-        }
-
-        if(mediaView.getMediaPlayer() == null) {
-            try {
-                resource = getClass().getResource("/viewpng/music/spaceMusic.mp3").toURI().toString();
-                media = new Media(resource);
-                mediaPlayer = new MediaPlayer(media);
-                mediaView.setMediaPlayer(mediaPlayer);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
-        mediaView.getMediaPlayer().play();
-    }
 
     private void createBackground() {
         Image backgroundImage = new Image(getClass().getResourceAsStream("/viewpng/deep_blue.png"),
